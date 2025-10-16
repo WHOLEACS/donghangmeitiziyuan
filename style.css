@@ -1,0 +1,50 @@
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.pdf-viewer {
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.download-section {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.download-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.download-btn:hover {
+    background-color: #45a049;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .pdf-viewer {
+        height: 400px;
+    }
+}
