@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 预览与下载</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .pdf-viewer {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+
+        .fallback-text {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #2c3e50;">东航媒体资源文档预览</h1>
+
+        <!-- PDF 嵌入区域 -->
+        <div class="pdf-viewer">
+            <!-- 现代浏览器方案 -->
+            <iframe
+                id="pdfIframe"
+                src="donghangmeiti.pdf#toolbar=0"
+                width="100%"
+                height="600px"
+                frameborder="0"
+                class="pdf-viewer"
+            ></iframe>
+
+            <!-- 兼容性方案 -->
+            <object
+                data="donghangmeiti.pdf"
+                type="application/pdf"
+                width="100%"
+                height="600px"
+                class="pdf-viewer"
+            >
+                <embed
+                    src="donghangmeiti.pdf"
+                    type="application/pdf"
+                    width="100%"
+                    height="600px"
+                >
+                <p class="fallback-text">
+                    您的浏览器不支持PDF预览，请<a href="donghangmeiti.pdf" download>点击此处下载</a>
+                </p>
+            </object>
+        </div>
+
+        <!-- 增强型下载按钮 -->
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="donghangmeiti.pdf" download="技术网页.pdf" class="download-btn">
+                立即下载 PDF 文件
+            </a>
+        </div>
+    </div>
+
+    <!-- PDF.js 备用方案（可选） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        // 检测浏览器是否支持PDF渲染
+        if (typeof PDFJS === 'undefined') {
+            document.querySelector('.pdf-viewer').innerHTML = `
+                <div class="fallback-text">
+                    PDF阅读器未检测到，请更新浏览器或<a href="your-document.pdf" download>下载PDF文件</a>
+                </div>
+            `;
+        } else {
+            // 配置PDF.js
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+            // 渲染PDF到canvas（备用方案）
+            const url = 'your-document.pdf';
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                // 渲染第一页
+                pdf.getPage(1).then(page => {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    document.querySelector('.pdf-viewer').appendChild(canvas);
+                    page.render({
+                        canvasContext: ctx,
+                        viewport: viewport
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+</html>
